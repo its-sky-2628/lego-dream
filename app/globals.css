@@ -185,3 +185,46 @@ a {
     }
   }
 }
+
+
+/* Premium moving light around hero */
+.animated-hero-border {
+  border-radius: 38px;
+  padding: 2px;
+
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 285deg,
+    rgba(255, 77, 46, 0.15) 305deg,
+    #ff4d2e 325deg,
+    #a855f7 345deg,
+    transparent 360deg
+  );
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite: xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  mask-composite: exclude;
+
+  animation: dreamBorderSpin 4s linear infinite;
+}
+
+@keyframes dreamBorderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-hero-border {
+    animation: none;
+  }
+}

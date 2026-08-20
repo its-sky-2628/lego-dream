@@ -392,6 +392,9 @@ export default function Home() {
               {/* IMAGE FRAME */}
               <div className="relative overflow-hidden rounded-[38px] shadow-[0_35px_80px_rgba(20,25,70,0.25)]">
 
+                {/* ANIMATED BORDER LIGHT */}
+                <div className="animated-hero-border pointer-events-none absolute inset-0 z-30 rounded-[38px]" />
+
                 <img
                   src="/Hero.png"
                   alt="Dream comfort system"

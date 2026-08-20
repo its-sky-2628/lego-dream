@@ -12,7 +12,7 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const products = [
   {
@@ -95,10 +95,55 @@ const faqs = [
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursor({
+        x: e.clientX,
+        y: e.clientY,
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
+      {/* PREMIUM CURSOR TRAIL */}
+      <motion.div
+        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#ff4d2e]/60 bg-[#ff4d2e]/10 shadow-[0_0_25px_rgba(255,77,46,0.35)] md:block"
+        animate={{
+          x: cursor.x,
+          y: cursor.y,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 35,
+          mass: 0.25,
+        }}
+      />
+
+      <motion.div
+        className="pointer-events-none fixed left-0 top-0 z-[9998] hidden h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#087fce]/10 blur-xl md:block"
+        animate={{
+          x: cursor.x,
+          y: cursor.y,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 180,
+          damping: 25,
+          mass: 0.5,
+        }}
+      />
+
       <main className="min-h-screen overflow-hidden bg-[#f6f3ed] text-[#111111]">
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-black/5 bg-[#f6f3ed]/85 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
@@ -631,7 +676,7 @@ export default function Home() {
                 transition={{ delay: productIndex * 0.1 }}
                 className={`group relative rounded-[32px] border bg-white p-8 transition-all duration-500 hover:-translate-y-2 ${theme.border} ${theme.hoverBorder} ${theme.glow} ${
                   product.featured
-                    ? "shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
+                    ? "z-10 scale-[1.07] border-2 shadow-[0_25px_70px_rgba(255,77,46,0.20)] hover:scale-[1.09]"
                     : "shadow-[0_10px_35px_rgba(0,0,0,0.04)]"
                 }`}
               >
@@ -694,7 +739,11 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <button className="rounded-full bg-[#111111] px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProduct(product.name)}
+                    className="w-full rounded-full bg-[#111111] px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#ff4d2e] hover:shadow-[0_10px_30px_rgba(255,77,46,0.25)] active:scale-95 sm:w-auto"
+                  >
                     Choose
                   </button>
                 </div>
@@ -757,7 +806,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {[
                 {
                   quote:
@@ -773,26 +822,55 @@ export default function Home() {
                 },
                 {
                   quote:
+                    "The modular setup makes it easy to find a comfort level that actually works for me.",
+                  name: "Jordan T.",
+                  role: "Verified DREAM owner",
+                },
+                {
+                  quote:
                     "It feels less like buying a mattress and more like building a sleep setup that belongs to you.",
                   name: "Daniel K.",
                   role: "Verified DREAM owner",
                 },
               ].map((review) => (
-                <div
+                <motion.button
                   key={review.name}
-                  className="rounded-[28px] border border-white/15 bg-white/10 p-7 backdrop-blur-sm"
-                >
-                  <p className="text-lg leading-8">
-                    “{review.quote}”
-                  </p>
+                  type="button"
+                  whileHover={{ y: -6, scale: 1.015 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                  }}
+                  className="group w-full rounded-[28px] border border-white/15 bg-white/10 p-6 text-left backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/[0.16] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-2 focus:ring-white/50 sm:p-7"
 
-                  <div className="mt-8">
-                    <p className="font-black">{review.name}</p>
-                    <p className="mt-1 text-sm text-white/50">
-                      {review.role}
-                    </p>
+                >
+                  <div className="flex h-full min-h-[250px] flex-col justify-between">
+                    <div>
+                      <div className="mb-5 flex gap-1 text-sm text-white">
+                        ★ ★ ★ ★ ★
+                      </div>
+
+                      <p className="text-base leading-7 text-white sm:text-lg sm:leading-8">
+                        “{review.quote}”
+                      </p>
+                    </div>
+
+                    <div className="mt-7 flex items-end justify-between gap-4">
+                      <div>
+                        <p className="font-black">{review.name}</p>
+                        <p className="mt-1 text-sm text-white/50">
+                          {review.role}
+                        </p>
+                      </div>
+
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-lg transition-transform duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -850,30 +928,139 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-6 pb-10 lg:px-8">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[40px] bg-[#ff4d2e] px-8 py-20 text-center text-white sm:px-16">
-          <p className="text-sm font-black uppercase tracking-[0.25em] text-white/60">
-            Ready?
-          </p>
+      <section className="px-4 pb-10 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="group relative mx-auto max-w-7xl overflow-hidden rounded-[40px] bg-[#ff4d2e] px-6 py-20 text-center text-white shadow-[0_30px_80px_rgba(255,77,46,0.22)] sm:px-16 sm:py-24"
+        >
 
-          <h2 className="mx-auto mt-5 max-w-3xl text-5xl font-black tracking-[-0.05em] sm:text-7xl">
-            Stop scrolling.
-            <br />
-            Start sleeping.
-          </h2>
+          {/* Ambient glow */}
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.25, 0.4, 0.25],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/20 blur-3xl"
+          />
 
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-white/75">
-            Build a better night with DREAM™.
-          </p>
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.15, 0.3, 0.15],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="pointer-events-none absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-[#087fce]/30 blur-3xl"
+          />
 
-          <a
-            href="#shop"
-            className="mt-10 inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-black text-[#111111] transition hover:-translate-y-1"
-          >
-            Build your DREAM
+          {/* Floating DREAM blocks */}
+          <motion.div
+            animate={{ y: [0, -12, 0], rotate: [0, 4, 0] }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="pointer-events-none absolute left-[8%] top-[18%] hidden h-10 w-10 rounded-xl bg-white/20 shadow-lg backdrop-blur-sm sm:block"
+          />
 
-          </a>
-        </div>
+          <motion.div
+            animate={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
+            transition={{
+              duration: 4.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.8,
+            }}
+            className="pointer-events-none absolute right-[10%] top-[28%] hidden h-14 w-14 rounded-2xl bg-white/15 shadow-lg backdrop-blur-sm sm:block"
+          />
+
+          <motion.div
+            animate={{ y: [0, -8, 0], x: [0, 5, 0] }}
+            transition={{
+              duration: 5.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1.2,
+            }}
+            className="pointer-events-none absolute bottom-[15%] left-[17%] hidden h-6 w-6 rounded-lg bg-[#ffc83d]/70 sm:block"
+          />
+
+          {/* Content */}
+          <div className="relative z-10">
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="text-xs font-black uppercase tracking-[0.3em] text-white/65 sm:text-sm"
+            >
+              Ready?
+            </motion.p>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.25, duration: 0.6 }}
+              className="mx-auto mt-5 max-w-3xl text-5xl font-black leading-[0.95] tracking-[-0.055em] sm:text-7xl"
+            >
+              Stop scrolling.
+              <br />
+              <span className="text-white/90">Start sleeping.</span>
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="mx-auto mt-6 max-w-xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8"
+            >
+              Build a better night with DREAM™.
+            </motion.p>
+
+            <motion.a
+              href="#shop"
+              whileHover={{
+                y: -6,
+                scale: 1.04,
+              }}
+              whileTap={{ scale: 0.96 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 18,
+              }}
+              className="mt-10 inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-black text-[#111111] shadow-[0_12px_35px_rgba(0,0,0,0.15)] transition-shadow duration-300 hover:shadow-[0_18px_45px_rgba(0,0,0,0.25)]"
+            >
+              Build your DREAM
+              <span className="text-lg transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
+            </motion.a>
+
+            <div className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-semibold text-white/60">
+              <span>30-night trial</span>
+              <span>•</span>
+              <span>Free delivery</span>
+              <span>•</span>
+              <span>5-year warranty</span>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       <footer className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-10 text-sm text-black/45 sm:flex-row sm:items-center sm:justify-between lg:px-8">

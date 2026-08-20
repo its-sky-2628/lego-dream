@@ -115,3 +115,36 @@ a {
 
 
 
+
+/* Featured DREAM CLASSIC pricing card */
+#shop .grid > div:nth-child(2) {
+  position: relative;
+  z-index: 10;
+  transform: scale(1.07);
+  border-width: 2px;
+  box-shadow:
+    0 20px 45px rgba(255, 77, 46, 0.16),
+    0 0 0 1px rgba(255, 77, 46, 0.18);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+#shop .grid > div:nth-child(2):hover {
+  transform: scale(1.09) translateY(-6px);
+  box-shadow:
+    0 28px 60px rgba(255, 77, 46, 0.22),
+    0 0 35px rgba(255, 77, 46, 0.14);
+}
+
+/* Keep pricing cards normal on smaller screens */
+@media (max-width: 1023px) {
+  #shop .grid > div:nth-child(2) {
+    transform: none;
+  }
+
+  #shop .grid > div:nth-child(2):hover {
+    transform: translateY(-4px);
+  }
+}
+

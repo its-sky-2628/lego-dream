@@ -96,6 +96,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -105,10 +106,25 @@ export default function Home() {
       });
     };
 
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const documentHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const progress =
+        documentHeight > 0 ? (scrollTop / documentHeight) * 100 : 0;
+
+      setScrollProgress(progress);
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
+
+    handleScroll();
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -143,6 +159,16 @@ export default function Home() {
           mass: 0.5,
         }}
       />
+
+      {/* SCROLL PROGRESS BAR */}
+      <div className="pointer-events-none fixed left-0 top-0 z-[10000] h-[2px] w-full bg-black/5">
+        <motion.div
+          className="h-full origin-left bg-gradient-to-r from-[#ff4d2e] via-[#a855f7] to-[#087fce] shadow-[0_0_10px_rgba(168,85,247,0.45)]"
+          style={{
+            width: `${scrollProgress}%`,
+          }}
+        />
+      </div>
 
       <main className="min-h-screen overflow-hidden bg-[#f6f3ed] text-[#111111]">
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-black/5 bg-[#f6f3ed]/85 backdrop-blur-xl">
@@ -678,9 +704,11 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: productIndex * 0.1 }}
                 className={`group relative rounded-[32px] border bg-white p-8 transition-all duration-500 hover:-translate-y-2 ${theme.border} ${theme.hoverBorder} ${theme.glow} ${
-                  product.featured
-                    ? "z-10 scale-[1.07] border-2 shadow-[0_25px_70px_rgba(255,77,46,0.20)] hover:scale-[1.09]"
-                    : "shadow-[0_10px_35px_rgba(0,0,0,0.04)]"
+                  selectedProduct === product.name
+                    ? "z-20 -translate-y-3 scale-[1.04] border-2 shadow-[0_0_0_2px_rgba(255,77,46,0.25),0_25px_70px_rgba(255,77,46,0.25)]"
+                    : product.featured
+                      ? "z-10 scale-[1.07] border-2 shadow-[0_25px_70px_rgba(255,77,46,0.20)] hover:scale-[1.09]"
+                      : "shadow-[0_10px_35px_rgba(0,0,0,0.04)]"
                 }`}
               >
                 {product.featured && (
@@ -695,10 +723,22 @@ export default function Home() {
                       <motion.div
                         key={index}
                         whileHover={{
-                          scale: 1.12,
-                          y: -5,
-                          rotate: index % 2 ? 3 : -3,
+                          scale: 1.16,
+                          y: index % 2 ? -8 : -5,
+                          x: index % 2 ? 3 : -3,
+                          rotate: index % 2 ? 5 : -5,
                         }}
+                        animate={
+                          selectedProduct === product.name
+                            ? {
+                                y: index % 2 ? -5 : -3,
+                                rotate: index % 2 ? 4 : -4,
+                              }
+                            : {
+                                y: 0,
+                                rotate: 0,
+                              }
+                        }
                         transition={{
                           type: "spring",
                           stiffness: 300,
@@ -737,17 +777,35 @@ export default function Home() {
                       Starting at
                     </p>
 
-                    <p className="mt-1 text-3xl font-black">
+                    <motion.p
+                      animate={{
+                        scale: selectedProduct === product.name ? 1.12 : 1,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                      }}
+                      className="mt-1 origin-left text-3xl font-black"
+                    >
                       {product.price}
-                    </p>
+                    </motion.p>
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => setSelectedProduct(product.name)}
-                    className="w-full rounded-full bg-[#111111] px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#ff4d2e] hover:shadow-[0_10px_30px_rgba(255,77,46,0.25)] active:scale-95 sm:w-auto"
+                    onClick={() =>
+                      setSelectedProduct(
+                        selectedProduct === product.name ? null : product.name
+                      )
+                    }
+                    className={`w-full rounded-full px-5 py-3 text-sm font-bold transition-all duration-300 active:scale-95 sm:w-auto ${
+                      selectedProduct === product.name
+                        ? "bg-[#ff4d2e] text-white shadow-[0_10px_30px_rgba(255,77,46,0.28)]"
+                        : "bg-[#111111] text-white hover:-translate-y-1 hover:bg-[#ff4d2e] hover:shadow-[0_10px_30px_rgba(255,77,46,0.25)]"
+                    }`}
                   >
-                    Choose
+                    {selectedProduct === product.name ? "Selected ✓" : "Choose"}
                   </button>
                 </div>
               </motion.div>

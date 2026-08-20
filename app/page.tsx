@@ -1,5 +1,5 @@
 "use client";
-
+import DreamConfigurator from "./components/DreamConfigurator";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -93,6 +93,7 @@ const faqs = [
 ];
 
 export default function Home() {
+  const [showConfigurator, setShowConfigurator] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
@@ -319,12 +320,7 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
-              <a
-                href="#shop"
-                className="inline-flex items-center justify-center rounded-full bg-[#111111] px-7 py-4 font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                Build your dream
-              </a>
+              <button type="button" onClick={() => setShowConfigurator(true)} className="inline-flex items-center justify-center rounded-full bg-[#111111] px-7 py-4 font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">Build your dream</button>
 
               <a
                 href="#system"
@@ -1123,6 +1119,10 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
+
+      {showConfigurator && (
+        <DreamConfigurator onClose={() => setShowConfigurator(false)} />
+      )}
 
       <footer className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-10 text-sm text-black/45 sm:flex-row sm:items-center sm:justify-between lg:px-8">
         <div className="font-black text-black">

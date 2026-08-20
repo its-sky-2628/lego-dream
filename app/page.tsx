@@ -20,12 +20,14 @@ const products = [
     price: "$129",
     description: "For lighter sleepers and smaller spaces.",
     blocks: "8 comfort blocks",
+    features: ["Soft", "Compact", "Adaptive"],
   },
   {
     name: "DREAM CLASSIC",
     price: "$199",
     description: "Our perfectly balanced everyday system.",
     blocks: "12 comfort blocks",
+    features: ["Balanced", "Cooling", "Adjustable"],
     featured: true,
   },
   {
@@ -33,6 +35,7 @@ const products = [
     price: "$299",
     description: "Maximum comfort for serious sleepers.",
     blocks: "18 comfort blocks",
+    features: ["Firm", "Cooling", "Maximum support"],
   },
 ];
 
@@ -703,12 +706,12 @@ export default function Home() {
                   selectedProduct === product.name
                     ? "z-20 -translate-y-3 scale-[1.04] border-2 shadow-[0_0_0_2px_rgba(255,77,46,0.25),0_25px_70px_rgba(255,77,46,0.25)]"
                     : product.featured
-                      ? "z-10 scale-[1.07] border-2 shadow-[0_25px_70px_rgba(255,77,46,0.20)] hover:scale-[1.09]"
-                      : "shadow-[0_10px_35px_rgba(0,0,0,0.04)]"
+                      ? "z-10 scale-[1.10] border-2 shadow-[0_30px_80px_rgba(255,77,46,0.28)] hover:scale-[1.12]"
+                      : "scale-[0.94] shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:scale-[0.97]"
                 }`}
               >
                 {product.featured && (
-                  <div className="absolute right-6 top-6 rounded-full bg-[#ff4d2e] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+                  <div className="absolute -right-3 top-6 z-20 rounded-full bg-[#ff4d2e] px-5 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-[0_10px_30px_rgba(255,77,46,0.35)]">
                     Most loved
                   </div>
                 )}
@@ -765,6 +768,35 @@ export default function Home() {
                   {product.description}
                 </p>
 
+                {product.featured && (
+                  <div className="mt-5 flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star
+                        key={index}
+                        className="h-4 w-4 fill-[#ffb400] text-[#ffb400]"
+                      />
+                    ))}
+                    <span className="ml-2 text-xs font-bold text-black/45">
+                      Most loved
+                    </span>
+                  </div>
+                )}
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {product.features.map((feature) => (
+                    <span
+                      key={feature}
+                      className={`rounded-full px-3 py-1.5 text-[11px] font-bold ${
+                        product.featured
+                          ? "bg-[#ff4d2e]/10 text-[#ff4d2e]"
+                          : "bg-black/[0.04] text-black/55"
+                      }`}
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+
                 <div className="mt-8 flex items-end justify-between">
                   <div>
                     <p
@@ -798,10 +830,16 @@ export default function Home() {
                     className={`w-full rounded-full px-5 py-3 text-sm font-bold transition-all duration-300 active:scale-95 sm:w-auto ${
                       selectedProduct === product.name
                         ? "bg-[#ff4d2e] text-white shadow-[0_10px_30px_rgba(255,77,46,0.28)]"
-                        : "bg-[#111111] text-white hover:-translate-y-1 hover:bg-[#ff4d2e] hover:shadow-[0_10px_30px_rgba(255,77,46,0.25)]"
+                        : product.featured
+                          ? "bg-[#ff4d2e] text-white shadow-[0_12px_35px_rgba(255,77,46,0.30)] hover:-translate-y-1 hover:bg-[#e94329]"
+                          : "bg-[#111111] text-white hover:-translate-y-1 hover:bg-[#ff4d2e] hover:shadow-[0_10px_30px_rgba(255,77,46,0.25)]"
                     }`}
                   >
-                    {selectedProduct === product.name ? "Selected ✓" : "Choose"}
+                    {selectedProduct === product.name
+                      ? "Selected ✓"
+                      : product.featured
+                        ? "BUILD THIS DREAM →"
+                        : "Choose"}
                   </button>
                 </div>
               </motion.div>

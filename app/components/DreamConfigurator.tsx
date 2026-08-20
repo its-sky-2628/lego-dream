@@ -23,7 +23,11 @@ const configs = {
   },
 };
 
-export default function DreamConfigurator() {
+export default function DreamConfigurator({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
   const [sleepStyle, setSleepStyle] =
     useState<SleepStyle>("Balanced");
 

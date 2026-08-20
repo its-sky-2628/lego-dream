@@ -478,7 +478,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08 }}
-                className="group rounded-[28px] border border-black/10 bg-white/50 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-[#ff4d2e] hover:bg-white hover:shadow-[0_0_0_1px_rgba(255,77,46,0.35),0_0_30px_rgba(255,77,46,0.28),0_12px_45px_rgba(0,0,0,0.08)]"
+                className="group mobile-glow rounded-[28px] border border-black/10 bg-white/50 p-7 transition-all duration-500 hover:-translate-y-2 hover:border-[#ff4d2e] hover:bg-white hover:shadow-[0_0_0_1px_rgba(255,77,46,0.35),0_0_30px_rgba(255,77,46,0.28),0_12px_45px_rgba(0,0,0,0.08)]"
               >
                 <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#111111] text-white">
                   <Icon size={21} />
@@ -843,7 +843,7 @@ export default function Home() {
                     stiffness: 300,
                     damping: 20,
                   }}
-                  className="group w-full rounded-[28px] border border-white/15 bg-white/10 p-6 text-left backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:bg-white/[0.16] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-2 focus:ring-white/50 sm:p-7"
+                  className="group w-full rounded-[28px] border border-white/15 bg-white/10 p-6 text-left backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/45 hover:bg-white/[0.16] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-2 focus:ring-white/50 sm:p-7"
 
                 >
                   <div className="flex h-full min-h-[250px] flex-col justify-between">
